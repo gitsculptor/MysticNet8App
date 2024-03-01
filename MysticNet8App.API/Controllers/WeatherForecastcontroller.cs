@@ -17,6 +17,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("{id}")]
     public IEnumerable<string> Get(long id)
     {
+        //Checking if loggger works
         _logger.LogInfo("Here is info message from our values controller.");
         _logger.LogDebug("Here is debug message from our values controller.");
         _logger.LogWarn("Here is warn message from our values controller.");
