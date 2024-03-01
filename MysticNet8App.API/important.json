@@ -1,0 +1,2 @@
+{"Timestamp":"2024-03-02T01:19:48.5888310+05:30","Level":"Warning","MessageTemplate":"Here is warn message from our values controller.","TraceId":"98a222c2ec99b1cc979900e48c421205","SpanId":"df0aaf673677ea57"}
+{"Timestamp":"2024-03-02T01:19:50.4552920+05:30","Level":"Error","MessageTemplate":"Here is an error message from our values controller.","TraceId":"98a222c2ec99b1cc979900e48c421205","SpanId":"df0aaf673677ea57"}
