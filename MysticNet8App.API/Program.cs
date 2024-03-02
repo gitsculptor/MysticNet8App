@@ -1,4 +1,5 @@
 using MysticNet8App.Extensions;
+using MysticNet8App.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
+builder.Services.AddInfrastructure();
 
 
 

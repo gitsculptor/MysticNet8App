@@ -7,12 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+      <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.0" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.1" />
       <PackageReference Include="Serilog" Version="4.0.0-dev-02113" />
       <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
       <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00972" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MysticAppNet8App.Domain\MysticAppNet8App.Domain.csproj" />
       <ProjectReference Include="..\MysticNet8App.Contracts\MysticNet8App.Contracts.csproj" />
     </ItemGroup>
 
