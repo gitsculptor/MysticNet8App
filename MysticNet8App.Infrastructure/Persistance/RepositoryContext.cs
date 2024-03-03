@@ -5,7 +5,7 @@ namespace MysticNet8App.Infrastructure.Persistance;
 
 public class RepositoryContext : DbContext
 {
-    public RepositoryContext(DbContextOptions options) : base(options)
+    public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
     {
     }
     

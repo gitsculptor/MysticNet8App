@@ -6,4 +6,22 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+        <HintPath>..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      </Reference>
+        
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MysticAppNet8App.Domain\MysticAppNet8App.Domain.csproj" />
+      <ProjectReference Include="..\MysticNet8App.Contracts\MysticNet8App.Contracts.csproj" />
+      <ProjectReference Include="..\MysticNet8App.Infrastructure\MysticNet8App.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="7.4.0" />
+      <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    </ItemGroup>
+
 </Project>

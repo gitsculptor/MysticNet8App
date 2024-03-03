@@ -18,6 +18,8 @@ public static class ServiceExtensions
     {
         services.AddSingleton<ILoggerManager, LoggerManager>();
     }
+    
+    
 
 
 
