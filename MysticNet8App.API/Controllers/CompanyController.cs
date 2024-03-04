@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using MysticAppNet8App.Domain.Models;
+using MysticNet8App.Contracts.Exception;
 using MysticNet8App.Contracts.Interfaces;
+using MysticNet8App.Contracts.Request;
+using MysticNet8App.Contracts.Response;
 
 namespace MysticNet8App.Controllers;
 
@@ -29,42 +32,29 @@ public class CompanyController : ControllerBase
     public IActionResult GetCompanyById(Guid id)
     {
         var company = _serviceManager.CompanyService.GetCompanyById(id, trackChanges: false);
-        if (company == null)
-            return NotFound();
+        if (company is null)
+            throw new ResourceNotFoundException(id, "company");
 
         return Ok(company);
     }
 
     [HttpPost]
-    public IActionResult CreateCompany([FromBody] Company company)
+    public IActionResult CreateCompany([FromBody] CompanyInput company)
     {
-        if (company == null)
-            return BadRequest("Company object is null");
-
         _serviceManager.CompanyService.CreateCompany(company);
         return Created();
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateCompany(Guid id, [FromBody] Company company)
+    public IActionResult UpdateCompany(Guid id, [FromBody] CompanyInput company)
     {
-        if (company == null)
-            return BadRequest("Company object is null");
-
-        if (id != company.Id)
-            return BadRequest("Company Id mismatch");
-
-        _serviceManager.CompanyService.UpdateCompany(company);
+        _serviceManager.CompanyService.UpdateCompany(company, id);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteCompany(Guid id)
     {
-        var company = _serviceManager.CompanyService.GetCompanyById(id, trackChanges: false);
-        if (company == null)
-            return NotFound();
-
         _serviceManager.CompanyService.DeleteCompany(id);
         return NoContent();
     }

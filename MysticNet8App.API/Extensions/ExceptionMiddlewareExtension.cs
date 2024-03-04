@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
+using MysticNet8App.Contracts.Exception;
 using MysticNet8App.Contracts.Interfaces;
 using MysticNet8App.ErrorModel;
 
@@ -17,13 +18,25 @@ public static class ExceptionMiddlewareExtension
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                if (contextFeature != null)
+                if (contextFeature?.Error is ResourceNotFoundException)
                 {
-                    logger.LogError($"Something went wrong: {contextFeature.Error}");
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                    logger.LogError($"StackTrace - {contextFeature?.Error.StackTrace}");
                     await context.Response.WriteAsync(new ErrorDetails()
                     {
                         StatusCode = context.Response.StatusCode,
-                        Message = "Internal Server Error.",
+                        Message = contextFeature?.Error.Message
+                    }.ToString());
+                }
+                else
+                {
+                    logger.LogError($"Something went wrong: {contextFeature?.Error}");
+                    if (contextFeature?.Error != null)
+                        logger.LogError($"StackTrace - {contextFeature?.Error.StackTrace}");
+                    await context.Response.WriteAsync(new ErrorDetails()
+                    {
+                        StatusCode = context.Response.StatusCode,
+                        Message = "Internal Server Error."
                     }.ToString());
                 }
             });

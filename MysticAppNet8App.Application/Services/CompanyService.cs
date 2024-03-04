@@ -2,7 +2,9 @@ using Mapster;
 using MapsterMapper;
 using MysticAppNet8App.Application.Interfaces;
 using MysticAppNet8App.Domain.Models;
+using MysticNet8App.Contracts.Exception;
 using MysticNet8App.Contracts.Interfaces;
+using MysticNet8App.Contracts.Request;
 using MysticNet8App.Contracts.Response;
 
 namespace MysticAppNet8App.Application.Services;
@@ -27,8 +29,7 @@ public class CompanyService : ICompanyService
 
         var result = _mapper.Map<List<CompanyDto>>(companies);
 
-       // return result;
-       throw new Exception();
+        return result;
     }
 
     public CompanyDto GetCompanyById(Guid companyId, bool trackChanges)
@@ -44,16 +45,23 @@ public class CompanyService : ICompanyService
         return result;
     }
 
-    public void CreateCompany(Company company)
+    public void CreateCompany(CompanyInput companyInput)
     {
-        company.Id = new Guid();
+        var company = _mapper.Map<Company>(companyInput);
+        company.Id = Guid.NewGuid();
         _repository.Company.CreateCompany(company);
         _repository.Save();
     }
 
-    public void UpdateCompany(Company company)
+    public void UpdateCompany(CompanyInput company, Guid id)
     {
-        _repository.Company.UpdateCompany(company);
+        var x = _repository.Company.GetCompanyById(id, true);
+        if (x is null)
+            throw new ResourceNotFoundException(id, "company");
+
+        x.Address = company.Address;
+        x.Country = x.Name;
+        _repository.Company.UpdateCompany(x);
         _repository.Save();
     }
 
