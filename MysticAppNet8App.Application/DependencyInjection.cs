@@ -18,7 +18,15 @@ public static class DependencyInjection
         services.AddScoped<IEmployeeService, EmployeeService>();
       //  services.AddScoped<ILoggerManager, LoggerManager>();
        services.AddMapster();
+       ConfigureMapsterMappings();
 
+    }
+    
+    private static void ConfigureMapsterMappings()
+    {
+        TypeAdapterConfig<Employee, EmployeeDto>.NewConfig()
+            .MapWith(src => new EmployeeDto(src.Id, src.Name, src.Position, src.CompanyId,src.Age));
+        // Add more mappings as needed
     }
 
    

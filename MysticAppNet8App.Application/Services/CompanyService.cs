@@ -45,12 +45,13 @@ public class CompanyService : ICompanyService
         return result;
     }
 
-    public void CreateCompany(CompanyInput companyInput)
+    public CompanyDto CreateCompany(CompanyInput companyInput)
     {
         var company = _mapper.Map<Company>(companyInput);
         company.Id = Guid.NewGuid();
         _repository.Company.CreateCompany(company);
         _repository.Save();
+        return _mapper.Map<CompanyDto>(company);
     }
 
     public void UpdateCompany(CompanyInput company, Guid id)

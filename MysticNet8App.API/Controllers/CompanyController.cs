@@ -28,7 +28,7 @@ public class CompanyController : ControllerBase
         return Ok(companies);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}",Name = "CompanyById")]
     public IActionResult GetCompanyById(Guid id)
     {
         var company = _serviceManager.CompanyService.GetCompanyById(id, trackChanges: false);
@@ -41,8 +41,8 @@ public class CompanyController : ControllerBase
     [HttpPost]
     public IActionResult CreateCompany([FromBody] CompanyInput company)
     {
-        _serviceManager.CompanyService.CreateCompany(company);
-        return Created();
+        var result = _serviceManager.CompanyService.CreateCompany(company);
+        return CreatedAtRoute("CompanyById", new { id = result.Id }, result);
     }
 
     [HttpPut("{id}")]

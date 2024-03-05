@@ -8,7 +8,7 @@ public interface ICompanyService
 {
     IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges);
     CompanyDto GetCompanyById(Guid companyId, bool trackChanges);
-    void CreateCompany(CompanyInput company);
+    CompanyDto CreateCompany(CompanyInput company);
     void UpdateCompany(CompanyInput company,Guid id);
     void DeleteCompany(Guid id);
 }
