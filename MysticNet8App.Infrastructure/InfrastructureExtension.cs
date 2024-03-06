@@ -26,6 +26,7 @@ public static class InfrastructureExtension
         services.AddScoped<IRepositoryManager, RepositoryManager>();
         services.AddScoped<ICompanyRepository,CompanyRepository>();
         services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+        
     }
     
 }

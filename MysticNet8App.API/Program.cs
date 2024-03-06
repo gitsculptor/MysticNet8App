@@ -14,6 +14,8 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddServices();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 
 
 
@@ -31,6 +33,7 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.UseCors("CorsPolicy");
+app.UseAuthentication();
 app.UseAuthorization();
 app.Run();
 
