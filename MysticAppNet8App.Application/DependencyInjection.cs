@@ -1,5 +1,6 @@
 using Mapster;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MysticAppNet8App.Application.Interfaces;
 using MysticAppNet8App.Application.Services;
@@ -12,7 +13,7 @@ namespace MysticAppNet8App.Application;
 
 public static class DependencyInjection
 {
-    public static void AddServices(this IServiceCollection services)
+    public static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IServiceManager,ServiceManager>();
@@ -22,7 +23,7 @@ public static class DependencyInjection
         services.AddScoped<UserManager<User>>();
       //  services.AddScoped<ILoggerManager, LoggerManager>();
        services.AddMapster();
-       ConfigureMapsterMappings();
+       
 
     }
     

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MysticAppNet8App.Domain.Models;
 using MysticNet8App.Contracts.Exception;
@@ -22,6 +23,7 @@ public class CompanyController : ControllerBase
 
 
     [HttpGet]
+    [Authorize(Roles = "Manager")]
     public IActionResult GetCompanies()
     {
         var companies = _serviceManager.CompanyService.GetAllCompanies(trackChanges: false);
