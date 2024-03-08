@@ -4,16 +4,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace MysticNet8App.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Updatingtablesforusers : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateTable(
-                name: "AspNetRoles",
+                name: "MysticRoles",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -27,12 +32,12 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                    table.PrimaryKey("PK_MysticRoles", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "MysticUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -41,6 +46,9 @@ namespace MysticNet8App.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LastName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshToken = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -66,12 +74,12 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_MysticUsers", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
+                name: "MysticRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -85,18 +93,18 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_MysticRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        name: "FK_MysticRoleClaims_MysticRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        principalTable: "MysticRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
+                name: "MysticUserClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -110,18 +118,18 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.PrimaryKey("PK_MysticUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        name: "FK_MysticUserClaims_MysticUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "MysticUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
+                name: "MysticUserLogins",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -135,18 +143,18 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_MysticUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        name: "FK_MysticUserLogins_MysticUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "MysticUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
+                name: "MysticUserRoles",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -156,24 +164,24 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_MysticUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        name: "FK_MysticUserRoles_MysticRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        principalTable: "MysticRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        name: "FK_MysticUserRoles_MysticUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "MysticUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
+                name: "MysticUserTokens",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -187,50 +195,59 @@ namespace MysticNet8App.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_MysticUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        name: "FK_MysticUserTokens_MysticUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        principalTable: "MysticUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "MysticRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "99ad0cbd-3421-416a-8f8a-33fbfb1da40a", null, "Administrator", "ADMINISTRATOR" },
+                    { "a12160db-1c4b-49b1-90eb-8fff0549a48c", null, "Manager", "MANAGER" }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetRoleClaims_RoleId",
-                table: "AspNetRoleClaims",
+                name: "IX_MysticRoleClaims_RoleId",
+                table: "MysticRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                table: "AspNetRoles",
+                table: "MysticRoles",
                 column: "NormalizedName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserClaims_UserId",
-                table: "AspNetUserClaims",
+                name: "IX_MysticUserClaims_UserId",
+                table: "MysticUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserLogins_UserId",
-                table: "AspNetUserLogins",
+                name: "IX_MysticUserLogins_UserId",
+                table: "MysticUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_RoleId",
-                table: "AspNetUserRoles",
+                name: "IX_MysticUserRoles_RoleId",
+                table: "MysticUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "AspNetUsers",
+                table: "MysticUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "AspNetUsers",
+                table: "MysticUsers",
                 column: "NormalizedUserName",
                 unique: true);
         }
@@ -239,25 +256,25 @@ namespace MysticNet8App.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "MysticRoleClaims");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                name: "MysticUserClaims");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                name: "MysticUserLogins");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                name: "MysticUserRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "MysticUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "MysticRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "MysticUsers");
         }
     }
 }

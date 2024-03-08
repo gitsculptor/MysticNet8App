@@ -12,8 +12,8 @@ using MysticNet8App.Infrastructure.Persistance;
 namespace MysticNet8App.Infrastructure.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240306133919_Updating tables for users")]
-    partial class Updatingtablesforusers
+    [Migration("20240308173037_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,21 @@ namespace MysticNet8App.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("MysticRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a12160db-1c4b-49b1-90eb-8fff0549a48c",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "99ad0cbd-3421-416a-8f8a-33fbfb1da40a",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -73,7 +87,7 @@ namespace MysticNet8App.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("MysticRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -98,7 +112,7 @@ namespace MysticNet8App.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("MysticUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -120,7 +134,7 @@ namespace MysticNet8App.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("MysticUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -135,7 +149,7 @@ namespace MysticNet8App.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("MysticUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -154,62 +168,7 @@ namespace MysticNet8App.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("MysticAppNet8App.Domain.Models.Company", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("CompanyId");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("varchar(60)");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("varchar(60)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("MysticAppNet8App.Domain.Models.Employee", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("EmployeeId");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("Employees");
+                    b.ToTable("MysticUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("MysticAppNet8App.Domain.Models.User", b =>
@@ -260,6 +219,12 @@ namespace MysticNet8App.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -279,7 +244,7 @@ namespace MysticNet8App.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("MysticUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -331,22 +296,6 @@ namespace MysticNet8App.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MysticAppNet8App.Domain.Models.Employee", b =>
-                {
-                    b.HasOne("MysticAppNet8App.Domain.Models.Company", "Company")
-                        .WithMany("Employees")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("MysticAppNet8App.Domain.Models.Company", b =>
-                {
-                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

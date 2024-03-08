@@ -23,4 +23,8 @@
       <ProjectReference Include="..\MysticNet8App.Contracts\MysticNet8App.Contracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

@@ -43,6 +43,6 @@ public class AuthenticationController : ControllerBase
         if (!await _serviceManager.AuthenticationService.ValidateUser(user))
             return Unauthorized();
         return Ok(new { Token = await _serviceManager
-            .AuthenticationService.CreateToken() });
+            .AuthenticationService.CreateToken(true) });
     }
 }
