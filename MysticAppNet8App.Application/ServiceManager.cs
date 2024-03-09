@@ -1,8 +1,10 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MysticAppNet8App.Application.Interfaces;
 using MysticAppNet8App.Application.Services;
+using MysticAppNet8App.Domain;
 using MysticAppNet8App.Domain.Models;
 using MysticNet8App.Contracts.Interfaces;
 
@@ -17,8 +19,9 @@ public class ServiceManager : IServiceManager
    
 
     public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager
-        logger, IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
+        logger, IMapper mapper, UserManager<User> userManager, IOptions<JwtConfiguration> configuration)
     {
+        
         _authenticationService =
             new Lazy<IAuthenticationService>(() => new AuthenticationService(mapper, logger, userManager,configuration));
         _companyService = new Lazy<ICompanyService>(() => new

@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using MysticAppNet8App.Domain;
 using MysticAppNet8App.Domain.Models;
 using MysticNet8App.Contracts.Interfaces;
 using MysticNet8App.Infrastructure.Logging;
@@ -43,9 +44,13 @@ public static class ServiceExtensions
     public static void ConfigureJWT(this IServiceCollection services, IConfiguration
         configuration)
     {
-        var jwtSettings = configuration.GetSection("JwtSettings");
-        //var secretKey = Environment.GetEnvironmentVariable("SECRET");
-        var secretKey = "letsseeauthenticationinactionforrealseeiftiworkds";
+        
+        services.Configure<JwtConfiguration>(configuration.GetSection("JwtSettings"));
+       var jwtSettings = configuration.GetSection("JwtSettings");
+        var jwtConfiguration = new JwtConfiguration();
+        configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
+        // //var secretKey = "letsseeauthenticationinactionforrealseeiftiworkds";
+        // var secretKey = jwtConfiguration.SecretKey;
         services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,10 +64,10 @@ public static class ServiceExtensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["validIssuer"],
-                    ValidAudience = jwtSettings["validAudience"],
+                    ValidIssuer = jwtConfiguration.ValidIssuer,
+                    ValidAudience = jwtConfiguration.ValidAudience,
                     IssuerSigningKey = new
-                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                        SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SecretKey))
                 };
             });
     }

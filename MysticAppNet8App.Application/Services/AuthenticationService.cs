@@ -5,8 +5,10 @@ using System.Text;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MysticAppNet8App.Application.Interfaces;
+using MysticAppNet8App.Domain;
 using MysticAppNet8App.Domain.Models;
 using MysticNet8App.Contracts.Interfaces;
 using MysticNet8App.Contracts.Request;
@@ -20,15 +22,15 @@ public class AuthenticationService : IAuthenticationService
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private User? _user;
-    private IConfiguration _configuration;
+    private readonly JwtConfiguration _configuration;
 
 
-    public AuthenticationService(IMapper mapper, ILoggerManager logger, UserManager<User> userManager, IConfiguration configuration)
+    public AuthenticationService(IMapper mapper, ILoggerManager logger, UserManager<User> userManager, IOptions<JwtConfiguration> configuration)
     {
         _mapper = mapper;
         _logger = logger;
         _userManager = userManager;
-        _configuration = configuration;
+        _configuration = configuration.Value;
     }
 
     public async Task<IdentityResult> RegisterUser(UserRegistrationDto
@@ -52,13 +54,7 @@ public class AuthenticationService : IAuthenticationService
         return result;
     }
 
-    public async Task<string> CreateToken()
-    {
-        var signingCredentials = GetSigningCredentials();
-        var claims = await GetClaims();
-        var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-        return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-    }
+   
     public async Task<TokenDto> CreateToken(bool populateExp)
     {
         var signingCredentials = GetSigningCredentials();
@@ -96,13 +92,12 @@ public class AuthenticationService : IAuthenticationService
     private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,
         List<Claim> claims)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
         var tokenOptions = new JwtSecurityToken
         (
-            issuer: jwtSettings["validIssuer"],
-            audience: jwtSettings["validAudience"],
+            issuer: _configuration.ValidIssuer,
+            audience: _configuration.ValidAudience,
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
+            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration.Expires)),
             signingCredentials: signingCredentials
         );
         return tokenOptions;
@@ -122,7 +117,7 @@ public class AuthenticationService : IAuthenticationService
     
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
+        // var jwtSettings = _configuration.GetSection("JwtSettings");
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateAudience = true,
@@ -131,8 +126,8 @@ public class AuthenticationService : IAuthenticationService
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"))),
             ValidateLifetime = true,
-            ValidIssuer = jwtSettings["validIssuer"],
-            ValidAudience = jwtSettings["validAudience"]
+            ValidIssuer = _configuration.ValidIssuer,
+            ValidAudience = _configuration.ValidAudience,
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         SecurityToken securityToken;
